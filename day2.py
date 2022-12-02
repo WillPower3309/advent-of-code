@@ -19,7 +19,7 @@ with open('input/day2.txt', 'r') as f:
         response = xyzToInt(line[2])
         totalScore += response + outcomeArr[(challenge - response) % 3]
 
-print("the score according to the strategy guide would be %d" % totalScore)
+print('the score according to the strategy guide would be %d' % totalScore)
 
 ##################
 # PART TWO
@@ -40,4 +40,4 @@ with open('input/day2.txt', 'r') as f:
         outcome = (xyzToInt(line[2]) - 1) * 3
         totalScore += outcome + outcomeToResponse(challenge, outcome)
 
-print("the score according to the strategy guide would be %d" % totalScore)
+print('the score according to the strategy guide would be %d' % totalScore)
