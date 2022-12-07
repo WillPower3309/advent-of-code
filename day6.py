@@ -7,11 +7,12 @@ def findMarkerInBuffer(numDistinct, buffer):
     numNotMarker = 0
     for i in range(len(buffer)):
         marker = buffer[i]
-        lastMarkerIndex = markers.get(marker, -1)
-        if lastMarkerIndex < i - (numDistinct - 1) and numNotMarker == 0:
+        prevOccurance = markers.get(marker, -1)
+        markerToDistinctDistance = prevOccurance + numDistinct - 1 - i
+        if markerToDistinctDistance < 0 and numNotMarker == 0:
             return i + 1
-        elif lastMarkerIndex >= 0:
-            numNotMarker = max(numNotMarker - 1,  (numDistinct - 1) - (i - lastMarkerIndex))
+        elif prevOccurance >= 0:
+            numNotMarker = max(numNotMarker - 1,  markerToDistinctDistance)
         elif numNotMarker > 0:
             numNotMarker -= 1
         markers[marker] = i
