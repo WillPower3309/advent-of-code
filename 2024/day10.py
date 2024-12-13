@@ -78,4 +78,4 @@ for y in range(len(trailGrid)):
         if trailGrid[y][x] == 0:
             totalScore += getScore(y, x)
 
-print('PART 1: %d' % totalScore)
+print('PART 2: %d' % totalScore)
