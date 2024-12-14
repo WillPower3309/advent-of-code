@@ -1,55 +1,32 @@
 import math
 
-class LinkedList:
-    def __init__(self, data):
-        self.data = data
-        self.next = None
-        self.prev = None
-
-    def insertNext(self, data):
-        newNode = LinkedList(data)
-        newNode.prev = self
-        newNode.next = self.next
-
-        if self.next:
-            self.next.prev = newNode
-        self.next = newNode
-
-stonesTail = None
-
+stones = None
 with open('input/day11.txt', 'r') as f:
     buffer = f.read()[:-1]
-    vals = buffer.split(' ')
-    stones = LinkedList(int(vals[0]))
-    currNode = stones
-    for i in range(1, len(vals)):
-        currNode.insertNext(int(vals[i]))
-        currNode = currNode.next
+    stones = [int(x) for x in buffer.split(' ')]
 
-    stonesTail = currNode
+cache = {}
+def getNumStones(stone, numIterations):
+    if numIterations == 0:
+        return 1
 
-# PART ONE
-for _ in range(25):
-    currNode = stonesTail
-    while currNode:
-        if currNode.data == 0:
-            currNode.data = 1
-        elif (int(math.log10(currNode.data)) + 1) % 2 == 0:
-            dataStr = str(currNode.data)
-            currNode.data = int(dataStr[:len(dataStr) // 2])
-            currNode.insertNext(int(dataStr[len(dataStr) // 2:]))
-        else:
-            currNode.data *= 2024
-        currNode = currNode.prev # reverse order to skip newly added stones 
+    if (stone, numIterations) in cache:
+        return cache[(stone, numIterations)]
 
-    while stonesTail.next:
-        stonesTail = stonesTail.next
+    size = 0
+    if stone == 0:
+        size = getNumStones(1, numIterations - 1)
+    elif (int(math.log10(stone)) + 1) % 2 == 0:
+        dataStr = str(stone)
+        size = getNumStones(int(dataStr[:len(dataStr) // 2]), numIterations - 1) + getNumStones(int(dataStr[len(dataStr) // 2:]), numIterations - 1)
+    else:
+        size = getNumStones(stone * 2024, numIterations - 1)
 
-stoneCount = 0
-currNode = stonesTail
-while currNode:
-    stoneCount += 1
-    currNode = currNode.prev 
+    if (stone, numIterations) not in cache:
+        cache[(stone, numIterations)] = size
 
-print('PART 1: %d' % stoneCount)
+    return size
+
+print('PART 1: %d' % sum(getNumStones(stone, 25) for stone in stones))
+print('PART 2: %d' % sum(getNumStones(stone, 75) for stone in stones))
 
