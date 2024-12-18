@@ -9,7 +9,7 @@ with open('input/day16.txt', 'r') as f:
         line = line.strip()
         for x in range(len(line)):
             if line[x] == 'S':
-                # position, last movement (starts facing east), score, tiles in snake
+                # position, last movement (starts facing east), score, tiles in path
                 queue.append(((y, x), (0, 1), 0, {(y, x)}))
         mazeGrid.append(line)
 
