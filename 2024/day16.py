@@ -1,7 +1,7 @@
 from collections import deque
 
 mazeGrid = []
-snakes = deque()
+queue = deque()
 
 with open('input/day16.txt', 'r') as f:
     for (y, line) in enumerate(f):
@@ -9,11 +9,12 @@ with open('input/day16.txt', 'r') as f:
         line = line.strip()
         for x in range(len(line)):
             if line[x] == 'S':
-                # position, last movement (starts facing east), score
-                snakes.append(((y, x), (0, 1), 0))
+                # position, last movement (starts facing east), score, tiles in snake
+                queue.append(((y, x), (0, 1), 0, {(y, x)}))
         mazeGrid.append(line)
 
 finalScore = float('inf')
+tilesInFinalScore = set()
 intersections = {} # min score at various intersections
 directions = {
     (-1, 0),
@@ -21,12 +22,15 @@ directions = {
     (1, 0),
     (0, -1),
 }
-while snakes:
-    (y, x), direction, score = snakes.popleft()
-
+while queue:
+    (y, x), direction, score, tiles = queue.popleft()
 
     if mazeGrid[y][x] == 'E':
-        finalScore = min(finalScore, score)
+        if score < finalScore:
+            finalScore = score
+            tilesInFinalScore = tiles
+        elif score == finalScore:
+            tilesInFinalScore = tilesInFinalScore.union(tiles)
         continue
 
     if (y, x, direction) in intersections and intersections[(y, x, direction)] < score:
@@ -34,20 +38,18 @@ while snakes:
 
     numMovementsFromPos = 0
     for newDirection in directions:
-        if newDirection[0] == -direction[0] and newDirection[1] == -direction[1]:
-            continue
-
         newY = y + newDirection[0]
         newX = x + newDirection[1]
-        if mazeGrid[newY][newX] != '#':
+        if mazeGrid[newY][newX] != '#' and (newY, newX) not in tiles:
             numMovementsFromPos += 1
             if newDirection == direction:
-                snakes.append(((newY, newX), newDirection, score + 1))
+                queue.append(((newY, newX), newDirection, score + 1, tiles | {(newY, newX)}))
             else:
-                snakes.append(((y, x), newDirection, score + 1000))
+                queue.append(((y, x), newDirection, score + 1000, tiles))
 
     if numMovementsFromPos > 1:
         intersections[(y, x, direction)] = score
 
 print('PART ONE: %d' % finalScore)
+print('PART TWO: %d' % len(tilesInFinalScore))
 
