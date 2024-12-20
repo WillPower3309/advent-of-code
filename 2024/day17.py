@@ -43,7 +43,7 @@ print('PART 1: %s' % ','.join(map(str, outputBuffer)))
 
 # brute forceish because my brain is tired
 A = 8 ** (len(program) - 1) # works in base 8
-power = len(program) - 3 # 8 ** power modifies the digit of the power plus the two subsequent digits
+power = len(program) - 3 # adjusting 8 ** power modifies the digit of the power plus the two subsequent digits
 output = []
 while output != program:
     if len(output) > len(program):
