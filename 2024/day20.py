@@ -32,8 +32,28 @@ for position in trackTimeDict:
         for i in range(1, 3):
             ny = y + (direction[0] * i)
             nx = x + (direction[1] * i)
-            if (ny, nx) in trackTimeDict and trackTimeDict[(ny, nx)] - trackTimeDict[position] - 2 >= 100:
+            if (ny, nx) in trackTimeDict and trackTimeDict[(ny, nx)] - trackTimeDict[position] - i >= 100:
                 numCheatsOver100 += 1
 
 print('PART ONE: %d' % numCheatsOver100)
+
+numCheatsOver100 = 0
+for position in trackTimeDict:
+    y, x = position
+
+    numCheatsOver100ForPos = set()
+    for dy in range(-20, 21):
+        ny = y + dy
+        for dx in range(-20, 21):
+            if abs(dy) + abs(dx) > 20: # TODO: incorporate me into for loop
+                continue
+            if dy == 0 and dx == 0:
+                continue
+            nx = x + dx
+            if (ny, nx) in trackTimeDict and trackTimeDict[(ny, nx)] - trackTimeDict[position] - abs(dy) - abs(dx) >= 100:
+                numCheatsOver100ForPos.add((ny, nx))
+
+    numCheatsOver100 += len(numCheatsOver100ForPos)
+
+print('PART TWO: %d' % numCheatsOver100)
 
