@@ -44,9 +44,7 @@ for position in trackTimeDict:
     numCheatsOver100ForPos = set()
     for dy in range(-20, 21):
         ny = y + dy
-        for dx in range(-20, 21):
-            if abs(dy) + abs(dx) > 20: # TODO: incorporate me into for loop
-                continue
+        for dx in range(-20 + abs(dy), 21 - abs(dy)):
             if dy == 0 and dx == 0:
                 continue
             nx = x + dx
